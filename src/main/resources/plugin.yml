@@ -1,0 +1,21 @@
+name: Auth
+version: '${project.version}'
+main: org.animey.auth.Auth
+api-version: '1.20'
+prefix: AnimeyAuth
+authors: [croyla]
+description: Offline-mode authentication for Animey
+commands:
+  register:
+    description: Register your account.
+    usage: /register <password>
+  login:
+    description: Login account.
+    usage: /login <password>
+  changepw:
+    description: Change your password.
+    usage: /changepw <old> <new>
+  reset:
+    description: Reset user.
+    usage: /reset <user>
+
