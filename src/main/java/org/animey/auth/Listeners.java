@@ -17,13 +17,17 @@ public class Listeners implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMessage(AsyncChatEvent e){
-        if(storage.frozen.contains(e.getPlayer())) e.setCancelled(true);
-        e.getPlayer().sendMessage(Component.text("Not logged in. Please log in or register.", Style.style(TextColor.color(200, 0, 0))));
+        if(storage.frozen.contains(e.getPlayer())) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(Component.text("Not logged in. Please log in or register.", Style.style(TextColor.color(200, 0, 0))));
+        }
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommand(PlayerCommandPreprocessEvent e){
-        if(storage.frozen.contains(e.getPlayer()) && (!e.getMessage().contains("/register") && !e.getMessage().contains("/login"))) e.setCancelled(true);
-        e.getPlayer().sendMessage(Component.text("Not logged in. Please log in or register.", Style.style(TextColor.color(200, 0, 0))));
+        if(storage.frozen.contains(e.getPlayer()) && (!e.getMessage().contains("/register") && !e.getMessage().contains("/login"))) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(Component.text("Not logged in. Please log in or register.", Style.style(TextColor.color(200, 0, 0))));
+        }
 
     }
     @EventHandler(priority = EventPriority.HIGHEST)
