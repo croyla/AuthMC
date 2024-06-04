@@ -1,7 +1,13 @@
 package org.animey.auth;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,10 +19,12 @@ import java.util.List;
 public class SqlStorage { // SQLite implementation at the moment
     private final String connection;
     private final Encryptor encryptor;
+    private final ComponentLogger log;
     List<Player> frozen = new ArrayList<>();
     protected SqlStorage(String connDB, Encryptor encryptor) throws SQLException {
         this.encryptor = encryptor;
         connection = connDB;
+        log = JavaPlugin.getPlugin(Auth.class).getComponentLogger();
         try (Connection conn = openConnection()) {
             String createTable = "CREATE TABLE IF NOT EXISTS login_users (name STRING PRIMARY KEY, password STRING)";
             Statement statement = conn.createStatement();
@@ -41,7 +49,7 @@ public class SqlStorage { // SQLite implementation at the moment
             statement.execute(call);
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
             return false;
         }
     }
@@ -55,7 +63,7 @@ public class SqlStorage { // SQLite implementation at the moment
             statement.execute(call);
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
             return false;
         }
     }
@@ -66,7 +74,7 @@ public class SqlStorage { // SQLite implementation at the moment
             Statement statement = conn.createStatement();
             return statement.execute(call);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
             return false;
         }
     }
@@ -86,7 +94,7 @@ public class SqlStorage { // SQLite implementation at the moment
             String password = statement.getResultSet().getString(1);
             if(password != null) return password;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
             return "";
         }
         return "";

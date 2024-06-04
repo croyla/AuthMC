@@ -81,10 +81,13 @@ public class Commands implements CommandExecutor {
                 if (args.length != 1) return false;
                 if (Bukkit.getPlayer(args[0]) != null) {
                     if (storage.deletePassword(args[0])) {
-                        if(Bukkit.getPlayer(args[0]).isOnline()) Bukkit.getPlayer(args[0]).kick(Component.text("Password Reset, please reconnect."));
+                        if(Bukkit.getPlayer(args[0]).isConnected()) Bukkit.getPlayer(args[0]).kick(Component.text("Password Reset, please reconnect."));
                         commandSender.sendMessage(Component.text("Reset player password", Style.style(TextColor.color(0, 200, 0))));
                         return true;
-                    } else commandSender.sendMessage(Component.text("Failed reset in DB.", Style.style(TextColor.color(200, 0, 0))));
+                    } else{
+                        if(Bukkit.getPlayer(args[0]).isConnected()) Bukkit.getPlayer(args[0]).kick(Component.text("Password Reset attempted, please reconnect."));
+                        commandSender.sendMessage(Component.text("Failed reset in DB.", Style.style(TextColor.color(200, 0, 0))));
+                    }
                 } else commandSender.sendMessage(Component.text("Player not found.", Style.style(TextColor.color(200, 0, 0))));
                 return false;
             default:

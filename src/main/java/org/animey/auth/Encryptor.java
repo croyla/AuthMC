@@ -1,5 +1,11 @@
 package org.animey.auth;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -7,8 +13,10 @@ import java.security.SecureRandom;
 class Encryptor {
     private final String salt;
     private static final String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private final ComponentLogger log;
     protected Encryptor(String salt) {
         this.salt = salt;
+        this.log = JavaPlugin.getPlugin(Auth.class).getComponentLogger();
     }
     protected static String generateSalt(){
         StringBuilder finalVal = new StringBuilder(50);
@@ -31,7 +39,7 @@ class Encryptor {
 
             return s.toString();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
         }
         return "error";
     }

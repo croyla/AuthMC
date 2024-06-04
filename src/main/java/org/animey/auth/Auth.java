@@ -1,5 +1,9 @@
 package org.animey.auth;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -10,16 +14,17 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public final class Auth extends JavaPlugin {
-
+    private ComponentLogger log;
     @Override
     public void onEnable() {
         // Plugin startup logic
+        log = getComponentLogger();
         Encryptor encryptor = new Encryptor(getSalt());
         SqlStorage storage;
         try {
             storage = new SqlStorage("plugins/Auth/authmc.db", encryptor);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
             throw new RuntimeException(e);
         }
         Commands commands = new Commands(storage);
@@ -29,13 +34,13 @@ public final class Auth extends JavaPlugin {
         this.getCommand("login").setExecutor(commands);
         this.getCommand("changepw").setExecutor(commands);
         this.getCommand("reset").setExecutor(commands); // Console exclusive command
-        System.out.println("Auth on");
+        getLogger().info("Auth on.");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        System.out.println("Auth off");
+        getLogger().info("Auth off.");
     }
 
     private String getSalt(){
@@ -51,7 +56,7 @@ public final class Auth extends JavaPlugin {
                     myWriter.close();
                 }
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
                 throw new RuntimeException(e);
             }
         } else {
@@ -62,7 +67,7 @@ public final class Auth extends JavaPlugin {
                     salt = reader.nextLine();
 
             } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
+                log.error(Component.text(e.getMessage(), Style.style(TextColor.color(200, 0, 0))));
                 throw new RuntimeException(e);
             }
         }
